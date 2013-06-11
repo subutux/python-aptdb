@@ -8,7 +8,7 @@ class AptPackage(object):
 	def __init__(self,json):
 		for k,v in json.items():
 			if k.find('-') > -1:
-				k.replace('-','_')
+				k = k.replace('-','_')
 			setattr(self,k,v)
 		if hasattr(self,'Depends'):
 			if self.Depends == "":
