@@ -14,7 +14,7 @@ class AptPackage(object):
 			if self.Depends == "":
 				self.Depends == None
 			else:
-				self.Depends = [item.split(' ', 1) for item in self.Depends.split(', ')]
+				self.Depends = [item.replace('(','').replace(')','').split(' ', 1) for item in self.Depends.split(', ')]
 		else:
 			setattr(self,'Depends',None)
 
@@ -22,7 +22,7 @@ class AptPackage(object):
 			if self.Pre_Depends == "":
 				self.Pre_Depends == None
 			else:
-				self.Pre_Depends = [item.split(' ', 1) for item in self.Pre_Depends.split(', ')]
+				self.Pre_Depends = [item.replace('(','').replace(')','').split(' ', 1) for item in self.Pre_Depends.split(', ')]
 		else:
 			setattr(self,'Pre_Depends',None)
 
@@ -30,7 +30,7 @@ class AptPackage(object):
 			if self.Suggests == "":
 				self.Suggests == None
 			else:
-				self.Suggests = [item.split(' ', 1) for item in self.Suggests.split(', ')]
+				self.Suggests = [item.replace('(','').replace(')','').split(' ', 1) for item in self.Suggests.split(', ')]
 		else:
 			setattr(self,'Suggests',None)
 
@@ -38,7 +38,7 @@ class AptPackage(object):
 			if self.Replaces == "":
 				self.Replaces == None
 			else:
-				self.Replaces = [item.split(' ', 1) for item in self.Replaces.split(', ')]
+				self.Replaces = [item.replace('(','').replace(')','').split(' ', 1) for item in self.Replaces.split(', ')]
 		else:
 			setattr(self,'Replaces',None)
 
@@ -46,7 +46,7 @@ class AptPackage(object):
 			if self.Conflicts == "":
 				self.Conflicts == None
 			else:
-				self.Conflicts = [item.split(' ', 1) for item in self.Conflicts.split(', ')]
+				self.Conflicts = [item.replace('(','').replace(')','').split(' ', 1) for item in self.Conflicts.split(', ')]
 		else:
 			setattr(self,'Conflicts',None)
 
@@ -54,7 +54,7 @@ class AptPackage(object):
 			if self.Breaks == "":
 				self.Breaks == None
 			else:
-				self.Breaks = [item.split(' ', 1) for item in self.Breaks.split(', ')]
+				self.Breaks = [item.replace('(','').replace(')','').split(' ', 1) for item in self.Breaks.split(', ')]
 		else:
 			setattr(self,'Breaks',None)
 
@@ -62,7 +62,7 @@ class AptPackage(object):
 			if self.Recommends == "":
 				self.Recommends == None
 			else:
-				self.Recommends = [item.split(' ', 1) for item in self.Recommends.split(', ')]
+				self.Recommends = [item.replace('(','').replace(')','').split(' ', 1) for item in self.Recommends.split(', ')]
 		else:
 			setattr(self,'Recommends',None)
 
