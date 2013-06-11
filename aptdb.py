@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 import urllib2
 import gzip
 import json
@@ -89,11 +90,11 @@ class aptdb(object):
 		self.load(Pgz)
 		self.db = self.getPackages()
 	def fetch(self):
-		print "Downloading %s",self.url
+		print "Downloading",self.url
 		try:
 			ul = urllib2.urlopen(self.url)
 		except:
-			print "error %s",e
+			print "error",e
 		tmp = '/tmp/apt.gz'
 		tmpfile = open(tmp,'wb')
 		tmpfile.write(ul.read())
