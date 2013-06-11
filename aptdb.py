@@ -3,6 +3,7 @@
 import urllib2
 import gzip
 import json
+import tempfile
 class AptPackage(object):
 	def __init__(self,json):
 		for k,v in json.items():
@@ -95,7 +96,7 @@ class aptdb(object):
 			ul = urllib2.urlopen(self.url)
 		except:
 			print "error",e
-		tmp = '/tmp/apt.gz'
+		tmp = tempfile.gettempdir() + '/python-aptdb-Packages.gz'
 		tmpfile = open(tmp,'wb')
 		tmpfile.write(ul.read())
 		tmpfile.close
