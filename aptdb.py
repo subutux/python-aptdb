@@ -4,8 +4,10 @@ import urllib2
 import gzip
 import json
 import tempfile
+import re
 class AptPackage(object):
 	def __init__(self,json):
+		self.Changelog = None
 		for k,v in json.items():
 			if k.find('-') > -1:
 				k = k.replace('-','_')
@@ -74,19 +76,61 @@ class AptPackage(object):
 		else:
 			setattr(self,'Tasks',None)
 
+	def __checkChangelog(self):
+		if self.Changelog == None:
+			if self.Changelog_Server:
+				url = self.Changelog_Server + '/' + self.Filename.replace('_' + self.Architecture + '.deb','') + '/changelog'
+				ul = urllib2.urlopen(url)
+				changelog = ul.read()
+				self.Changelog = self.__parseChangelog(changelog)
+	def getChangelog(self):
+		self.__checkChangelog()
+		return self.Changelog
+	def getCurrentChangelog(self):
+		self.__checkChangelog()
+		return self.Changelog[self.Version]
+	def getChangelogVersion(self,version):
+		self.__checkChangelog()
+		return self.Changelog[version]
+
+	def __parseChangelog(self,changelog):
+		changelogs = {}
+		currChangelog = {}
+		regexStart = re.compile(self.Package + ' \((.*)\) ([a-zA-Z \s]+); (\w+)\=(\w+)')
+		regexEnd = re.compile(' -- ([a-zA-Z \s]+) \<([A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]+)\>  (.*)')
+		for line in changelog.split('\n'):
+			if regexStart.match(line):
+				res = regexStart.search(line).groups()
+				currChangelog['Version'] = res[0]
+				currChangelog['Release'] = res[1]
+				currChangelog[res[2]] = res[3]
+				currChangelog['Changelog'] = ""
+			elif regexEnd.match(line):
+				res = regexEnd.search(line).groups()
+				currChangelog['Author'] = res[0]
+				currChangelog['Author_Email'] = res[1]
+				currChangelog['Date'] = res[2]
+				changelogs[currChangelog['Version']] = currChangelog
+				currChangelog = {}
+			else:
+				if currChangelog != {}:
+					currChangelog['Changelog'] += line
+		return changelogs
+
 	def __repr__(self):
 		return "<AptPackage '" + self.Package + "' v" + str(self.Version) + ">"
 	def __json__(self):
 		return json.dumps(self.__dict__, indent=4)
 
 class aptdb(object):
-	def __init__(self,burl,dist,repo,arch):
+	def __init__(self,burl,dist,repo,arch,changelogserver=None):
 		self.packages = {}
 		self.url = burl + '/dists/' + dist + '/' + repo + '/binary-' + arch + '/Packages.gz'
 		self.baseUrl = burl
 		self.dist = dist
 		self.repo = repo
 		self.arch = arch
+		self.changelogserver = changelogserver
 		Pgz = self.fetch()
 		self.load(Pgz)
 		self.db = self.getPackages()
@@ -110,6 +154,8 @@ class aptdb(object):
 		for line in Pgz.readlines():
 			if line == "\n":
 				total = total + 1
+				if self.changelogserver:
+					currPackage['Changelog-Server'] = self.changelogserver
 				self.packages[currPackage['Package']] = currPackage
 				currPackage = {}
 			else:
