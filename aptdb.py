@@ -130,7 +130,7 @@ class AptPackage(object):
 				currChangelog = {}
 			else:
 				if currChangelog != {}:
-					currChangelog['Changelog'] += line
+					currChangelog['Changelog'] += line+"\n"
 		return changelogs
 
 	def __repr__(self):
