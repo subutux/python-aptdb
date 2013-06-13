@@ -3,6 +3,7 @@ Example Usage
 
 Fetching the Packages database
 ------------------------------
+```python
 >>> import aptdb
 >>> adb = aptdb.aptdb("http://be.archive.ubuntu.com/ubuntu",'quantal','main','i386',changelogserver="http://changelogs.ubuntu.com/changelogs")
 Downloading http://be.archive.ubuntu.com/ubuntu/dists/quantal/main/binary-i386/Packages.gz
@@ -22,4 +23,4 @@ https://bugs.launchpad.net/ubuntu/+filebug
 <AptPackage 'zsh' v5.0.0-2ubuntu1>
 >>> print adb.db['zsh'].getCurrentChangelog()
 {'Author': 'Adam Conrad', 'Author_Email': 'red@ct.ed', 'Changelog': "\n  * Merge from Debian experimental, remaining changes:\n    - debian/zshrc: Enable completions by default, unless\n      skip_global_compinit is set\n    - Keep using the upstream tarball that contains pre-generated docs as\n      yodl is required to build them but the MIR hasn't been approved.\n    - Drop yodl from Build-Depends.\n\n", 'Date': 'Sun, 16 Sep 2012 02:23:12 -0600', 'Version': '5.0.0-2ubuntu1', 'Release': 'quantal', 'urgency': 'low'}
-
+```
